@@ -156,9 +156,9 @@ function startQuiz() {
 
 //  the timer function
 
-function startTimer(penality) {
+function startTimer(questionObj, penality) {
   let counter = 0;
-  let timerLeft = 35;
+  let timerLeft = 25;
 
   let penalised = penality;
 
@@ -187,10 +187,22 @@ function startTimer(penality) {
 
       console.log(currentTime);
 
-      if (penality) {
-        clearInterval(timer);
-        currentTime = currentTime - penalised;
-      }
+      //   if (questionObj.isCorrect === false) {
+      //     clearInterval(timer);
+      //     const timer = setInterval(tick, 1000);
+      //     currentTime = currentTime - penalised;
+      //     time.textContent = convertSecs(currentTime);
+      //   }
+
+      //   if (timer && questionObj.isCorrect == false) {
+      //     clearInterval(timer);
+
+      //     currentTime -= penalised;
+
+      //     console.log(currentTime);
+
+      //     timer.tick();
+      //   }
     }
   };
 
@@ -212,7 +224,7 @@ function renderQuestions(questionChoices) {
 
   // lets create a variable to store the current index of object in the array
 
-  const currentIndex = 0;
+  let currentIndex = 0;
 
   // lets get the child element of questions element
 
@@ -220,25 +232,31 @@ function renderQuestions(questionChoices) {
 
   questionsArr.forEach((element, index, array) => {
     // this console logs all the objects to the console
-    console.log(element);
+    // console.log(element);
     // console.log(index);
     // console.log(array);
 
     // since its an array of objects we need to set the index on the array
     // if the currentIndex == 0 then this logs the first object
-    console.log(questionsArr[currentIndex]);
+    // console.log(questionsArr[currentIndex]);
+
+    // we need to the following code until the array is complete
+
+    if (!element.length) {
+      console.log(element);
+    }
 
     if (element.isFirst && currentIndex === index) {
       // lets grab the title from questions object
 
-      console.log(element.question);
+      //   console.log(element.question);
 
       const questionTitle = element.question;
 
       questions.children[0].textContent = questionTitle;
 
       for (const choice of element.choices) {
-        console.log(choice);
+        // console.log(choice);
 
         // lets create all the elements for the buttons on the page
 
@@ -278,7 +296,7 @@ function renderQuestions(questionChoices) {
 
             // lets invoke the timer function and pass in a penality time
 
-            startTimer(10);
+            startTimer(element, 10);
 
             console.log(element);
 
@@ -292,10 +310,21 @@ function renderQuestions(questionChoices) {
 
             feedbackPara.textContent = "Wrong!";
           }
+
+          currentIndex += 1;
+
+          nextQuestion(questionsArr[currentIndex]);
         });
       }
     }
   });
+}
+
+// lets create another function here to generate the next question
+
+function nextQuestion(questionObject) {
+  console.log("next question");
+  console.log(questionObject);
 }
 
 startQuiz();
