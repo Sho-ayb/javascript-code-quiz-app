@@ -299,7 +299,7 @@ function renderQuestions(questionChoices) {
 
               // lets invoke the timer function and pass in a penality time
 
-              startTimer(element, 10);
+              startTimer(question, 10);
 
               feedback.classList.remove("hide");
 
