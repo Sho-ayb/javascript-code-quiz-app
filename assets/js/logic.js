@@ -158,7 +158,7 @@ function startQuiz() {
 
 function startTimer(questionObj, penality) {
   let counter = 0;
-  let timerLeft = 25;
+  let timerLeft = 5;
 
   let penalised = penality;
 
@@ -230,6 +230,12 @@ function renderQuestions(questionChoices) {
 
   const choicesEl = questions.children[1];
 
+  // just testing with standard for loop
+
+  //   for (let i = 0; i < questionsArr.length; i++) {
+  //     // console.log(questionsArr);
+  //   }
+
   questionsArr.forEach((element, index, array) => {
     // this console logs all the objects to the console
     // console.log(element);
@@ -242,79 +248,83 @@ function renderQuestions(questionChoices) {
 
     // we need to the following code until the array is complete
 
-    if (!element.length) {
-      console.log(element);
-    }
+    console.log(questionsArr.length);
 
-    if (element.isFirst && currentIndex === index) {
-      // lets grab the title from questions object
+    if (currentIndex != questionsArr.length) {
+      if (element.isFirst && currentIndex === index) {
+        // lets grab the title from questions object
 
-      //   console.log(element.question);
+        //   console.log(element.question);
 
-      const questionTitle = element.question;
+        const questionTitle = element.question;
 
-      questions.children[0].textContent = questionTitle;
+        questions.children[0].textContent = questionTitle;
 
-      for (const choice of element.choices) {
-        // console.log(choice);
+        for (const choice of element.choices) {
+          // console.log(choice);
 
-        // lets create all the elements for the buttons on the page
+          // lets create all the elements for the buttons on the page
 
-        const choiceBtn = document.createElement("button");
+          const choiceBtn = document.createElement("button");
 
-        // lets append it to the div element choices but first we need to query select the div element
+          // lets append it to the div element choices but first we need to query select the div element
 
-        choicesEl.appendChild(choiceBtn);
+          choicesEl.appendChild(choiceBtn);
 
-        choiceBtn.setAttribute("class", "button");
+          choiceBtn.setAttribute("class", "button");
 
-        choiceBtn.textContent = choice;
+          choiceBtn.textContent = choice;
 
-        choiceBtn.addEventListener("click", function () {
-          console.log(choiceBtn.textContent);
+          choiceBtn.addEventListener("click", function () {
+            console.log(choiceBtn.textContent);
 
-          if (choiceBtn.textContent === element.answer) {
-            // lets mutate the isCorrect key value of the questions object
+            if (choiceBtn.textContent === element.answer) {
+              // lets mutate the isCorrect key value of the questions object
 
-            element.isCorrect = true;
+              element.isCorrect = true;
 
-            console.log(element);
+              // need to invoke the score function here
 
-            feedback.classList.remove("hide");
+              console.log(element);
 
-            // lets create a h2 element on the feedback div container
+              feedback.classList.remove("hide");
 
-            feedbackPara = document.createElement("p");
+              // lets create a h2 element on the feedback div container
 
-            // lets append this to the div element
+              feedbackPara = document.createElement("p");
 
-            feedback.appendChild(feedbackPara);
+              // lets append this to the div element
 
-            feedbackPara.textContent = "Correct!";
-          } else {
-            element.isCorrect = false;
+              feedback.appendChild(feedbackPara);
 
-            // lets invoke the timer function and pass in a penality time
+              feedbackPara.textContent = "Correct!";
+            } else {
+              element.isCorrect = false;
 
-            startTimer(element, 10);
+              // lets invoke the timer function and pass in a penality time
 
-            console.log(element);
+              startTimer(element, 10);
 
-            feedback.classList.remove("hide");
+              console.log(element);
 
-            feedbackPara = document.createElement("p");
+              feedback.classList.remove("hide");
 
-            // lets append this to the div element
+              feedbackPara = document.createElement("p");
 
-            feedback.appendChild(feedbackPara);
+              // lets append this to the div element
 
-            feedbackPara.textContent = "Wrong!";
-          }
+              feedback.appendChild(feedbackPara);
 
-          currentIndex += 1;
+              feedbackPara.textContent = "Wrong!";
+            }
 
-          nextQuestion(questionsArr[currentIndex]);
-        });
+            currentIndex += 1;
+
+            if (currentIndex != 0) {
+              nextQuestion(questionsArr[currentIndex]);
+            }
+          });
+        }
       }
     }
   });
@@ -325,6 +335,47 @@ function renderQuestions(questionChoices) {
 function nextQuestion(questionObject) {
   console.log("next question");
   console.log(questionObject);
+
+  // lets invoke the function to remove all children
+
+  clearScreen();
+
+  console.log(questionObject.question);
+
+  const questionTitle = questionObject.question;
+
+  questions.children[0].textContent = questionTitle;
+
+  // lets
+
+  const choices = questionObject.choices;
+
+  console.log(choices);
+
+  for (const choice of choices) {
+    const choiceBtn = document.createElement("button");
+
+    // lets append it to the div element choices but first we need to query select the div element
+
+    choicesEl.appendChild(choiceBtn);
+
+    choiceBtn.setAttribute("class", "button");
+
+    choiceBtn.textContent = choice;
+
+    choiceBtn.addEventListener("click", function () {
+      console.log(choice);
+    });
+  }
+}
+
+// lets create a clearScreen function
+
+function clearScreen() {
+  questions.children[0].textContent = "";
+  questions.children[1].remove();
+
+  feedback.textContent = "";
 }
 
 startQuiz();
