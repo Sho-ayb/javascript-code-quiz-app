@@ -150,7 +150,7 @@ function startQuiz() {
 
     // lets start the timer to countdown from 30 seconds
     startTimer();
-    renderQuestions();
+    renderQuestions(questionsArr);
   });
 }
 
@@ -230,17 +230,13 @@ function renderQuestions(questionChoices) {
 
   const choicesEl = questions.children[1];
 
-  // just testing with standard for loop
-
-  //   for (let i = 0; i < questionsArr.length; i++) {
-  //     // console.log(questionsArr);
-  //   }
-
-  questionsArr.forEach((element, index, array) => {
+  questionChoices.forEach((question, index, array) => {
     // this console logs all the objects to the console
-    // console.log(element);
+    // console.log(question);
     // console.log(index);
-    // console.log(array);
+    // console.log(array[index]);
+
+    console.log(question === array[index]);
 
     // since its an array of objects we need to set the index on the array
     // if the currentIndex == 0 then this logs the first object
@@ -248,19 +244,19 @@ function renderQuestions(questionChoices) {
 
     // we need to the following code until the array is complete
 
-    console.log(questionsArr.length);
+    if (index != questionChoices.length) {
+      for (const key of Object.keys(questionChoices)) {
+        console.log(questionChoices[key]);
+      }
 
-    if (currentIndex != questionsArr.length) {
-      if (element.isFirst && currentIndex === index) {
-        // lets grab the title from questions object
+      if (question.hasAnswered === false) {
+        console.log("not answered");
 
-        //   console.log(element.question);
-
-        const questionTitle = element.question;
+        const questionTitle = question.question;
 
         questions.children[0].textContent = questionTitle;
 
-        for (const choice of element.choices) {
+        for (const choice of question.choices) {
           // console.log(choice);
 
           // lets create all the elements for the buttons on the page
@@ -281,7 +277,7 @@ function renderQuestions(questionChoices) {
             if (choiceBtn.textContent === element.answer) {
               // lets mutate the isCorrect key value of the questions object
 
-              element.isCorrect = true;
+              question.isCorrect = true;
 
               // need to invoke the score function here
 
@@ -299,13 +295,11 @@ function renderQuestions(questionChoices) {
 
               feedbackPara.textContent = "Correct!";
             } else {
-              element.isCorrect = false;
+              question.isCorrect = false;
 
               // lets invoke the timer function and pass in a penality time
 
               startTimer(element, 10);
-
-              console.log(element);
 
               feedback.classList.remove("hide");
 
@@ -317,12 +311,6 @@ function renderQuestions(questionChoices) {
 
               feedbackPara.textContent = "Wrong!";
             }
-
-            currentIndex += 1;
-
-            if (currentIndex != 0) {
-              nextQuestion(questionsArr[currentIndex]);
-            }
           });
         }
       }
@@ -332,42 +320,42 @@ function renderQuestions(questionChoices) {
 
 // lets create another function here to generate the next question
 
-function nextQuestion(questionObject) {
-  console.log("next question");
-  console.log(questionObject);
+// function nextQuestion(questionObject) {
+//   console.log("next question");
+//   console.log(questionObject);
 
-  // lets invoke the function to remove all children
+//   // lets invoke the function to remove all children
 
-  clearScreen();
+//   clearScreen();
 
-  console.log(questionObject.question);
+//   console.log(questionObject.question);
 
-  const questionTitle = questionObject.question;
+//   const questionTitle = questionObject.question;
 
-  questions.children[0].textContent = questionTitle;
+//   questions.children[0].textContent = questionTitle;
 
-  // lets
+//   // lets
 
-  const choices = questionObject.choices;
+//   const choices = questionObject.choices;
 
-  console.log(choices);
+//   console.log(choices);
 
-  for (const choice of choices) {
-    const choiceBtn = document.createElement("button");
+//   for (const choice of choices) {
+//     const choiceBtn = document.createElement("button");
 
-    // lets append it to the div element choices but first we need to query select the div element
+//     // lets append it to the div element choices but first we need to query select the div element
 
-    choicesEl.appendChild(choiceBtn);
+//     choicesEl.appendChild(choiceBtn);
 
-    choiceBtn.setAttribute("class", "button");
+//     choiceBtn.setAttribute("class", "button");
 
-    choiceBtn.textContent = choice;
+//     choiceBtn.textContent = choice;
 
-    choiceBtn.addEventListener("click", function () {
-      console.log(choice);
-    });
-  }
-}
+//     choiceBtn.addEventListener("click", function () {
+//       console.log(choice);
+//     });
+//   }
+// }
 
 // lets create a clearScreen function
 

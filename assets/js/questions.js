@@ -12,12 +12,13 @@ const questionsArr = [
     choices: ["string", "numbers", "objects", "all of them"],
     answer: "all of them",
     isCorrect: false,
-    isFirst: true,
+    hasAnswered: false,
   },
   {
     question: "Commonly used data types do not include ? ",
     choices: ["string", "numbers", "objects", "alerts"],
     answer: "alerts",
     isCorrect: false,
+    hasAnswered: false,
   },
 ];
