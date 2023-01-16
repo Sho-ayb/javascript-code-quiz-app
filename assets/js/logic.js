@@ -274,7 +274,7 @@ function renderQuestions(questionChoices) {
           choiceBtn.addEventListener("click", function () {
             console.log(choiceBtn.textContent);
 
-            if (choiceBtn.textContent === element.answer) {
+            if (choiceBtn.textContent === question.answer) {
               // lets mutate the isCorrect key value of the questions object
 
               question.isCorrect = true;
