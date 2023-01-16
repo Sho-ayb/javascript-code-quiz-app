@@ -142,17 +142,7 @@ console.log(endScreen);
 console.log(feedback);
 console.log(time);
 
-function startQuiz() {
-  // lets create an event listener on the startBtn element
-
-  startBtn.addEventListener("click", function () {
-    console.log("start button clicked");
-
-    // lets start the timer to countdown from 30 seconds
-    startTimer();
-    renderQuestions(questionsArr);
-  });
-}
+// all helper functions
 
 //  the timer function
 
@@ -209,114 +199,224 @@ function startTimer(questionObj, penality) {
   const timer = setInterval(tick, 1000);
 }
 
-// the renderQuestions function
+// cleanUpEls function
 
-function renderQuestions(questionChoices) {
-  //  lets first make disappear the start screen from the page
+function cleanUpEls(element) {
+  if (element === "startScreen") {
+    console.log("Cleaning start screen");
 
-  startScreen.setAttribute("class", "hide");
+    startScreen.setAttribute("class", "hide");
+  }
+}
 
-  // lets make the div element questions appear by removing the hide class from the element
+function makeAppear(whatEl, element) {
+  // Making element question appear on page
 
-  questions.classList.remove("hide");
+  if (whatEl === "question") {
+    console.log("inside whatEl");
 
-  // now we need to loop through the questions array of objects and render the specific properties to the page
+    console.log(element.question);
 
-  // lets create a variable to store the current index of object in the array
+    questions.classList.remove("hide");
 
-  let currentIndex = 0;
+    const questionTitle = element.question;
 
-  // lets get the child element of questions element
+    // console.log(questions);
 
-  const choicesEl = questions.children[1];
+    questions.children[0].textContent = questionTitle;
+  }
 
-  questionChoices.forEach((question, index, array) => {
-    // this console logs all the objects to the console
-    // console.log(question);
-    // console.log(index);
-    // console.log(array[index]);
+  // Making element choices appear on page
 
-    console.log(question === array[index]);
+  if (whatEl === "answers") {
+    // lets create the button on the page
 
-    // since its an array of objects we need to set the index on the array
-    // if the currentIndex == 0 then this logs the first object
-    // console.log(questionsArr[currentIndex]);
+    const answerBtn = document.createElement("button");
 
-    // we need to the following code until the array is complete
+    // lets first select the div element to append the elements
 
-    if (index != questionChoices.length) {
-      for (const key of Object.keys(questionChoices)) {
-        console.log(questionChoices[key]);
-      }
+    const answerEl = questions.children[1];
 
-      if (question.hasAnswered === false) {
-        console.log("not answered");
+    console.log(answerEl);
 
-        const questionTitle = question.question;
+    // lets append the buttons to the element here
 
-        questions.children[0].textContent = questionTitle;
+    answerEl.appendChild(answerBtn);
 
-        for (const choice of question.choices) {
-          // console.log(choice);
+    // lets insert the text in to buttons
 
-          // lets create all the elements for the buttons on the page
+    answerBtn.textContent = element;
 
-          const choiceBtn = document.createElement("button");
+    return answerBtn;
+  }
+}
 
-          // lets append it to the div element choices but first we need to query select the div element
+// checkAnswer function
 
-          choicesEl.appendChild(choiceBtn);
+function checkAnswer() {
+  console.log("Checking the answer");
+}
 
-          choiceBtn.setAttribute("class", "button");
+// main functions
 
-          choiceBtn.textContent = choice;
+// renderQuestions function
 
-          choiceBtn.addEventListener("click", function () {
-            console.log(choiceBtn.textContent);
+// lets create a global variable to keep track of the current index
 
-            if (choiceBtn.textContent === question.answer) {
-              // lets mutate the isCorrect key value of the questions object
+let currentIndex = 0;
 
-              question.isCorrect = true;
+function renderQuestions(questions) {
+  console.log(questions);
 
-              // need to invoke the score function here
+  // lets invoke the cleanUpEls function
 
-              console.log(element);
+  cleanUpEls("startScreen");
 
-              feedback.classList.remove("hide");
+  questions.forEach((currentQuestion, questionNumber) => {
+    console.log("in the forEach");
+    console.log(currentQuestion);
 
-              // lets create a h2 element on the feedback div container
+    makeAppear("question", currentQuestion);
 
-              feedbackPara = document.createElement("p");
+    // we need to loop through the object of answers
+    // and pass to makeAppear function
 
-              // lets append this to the div element
+    for (const answer in currentQuestion.answers) {
+      if (currentIndex === questionNumber) {
+        console.log(currentQuestion.answers[answer]);
+        const answerBtn = makeAppear(
+          "answers",
+          currentQuestion.answers[answer]
+        );
 
-              feedback.appendChild(feedbackPara);
+        console.log(answerBtn);
 
-              feedbackPara.textContent = "Correct!";
-            } else {
-              question.isCorrect = false;
-
-              // lets invoke the timer function and pass in a penality time
-
-              startTimer(question, 10);
-
-              feedback.classList.remove("hide");
-
-              feedbackPara = document.createElement("p");
-
-              // lets append this to the div element
-
-              feedback.appendChild(feedbackPara);
-
-              feedbackPara.textContent = "Wrong!";
-            }
-          });
-        }
+        answerBtn.addEventListener("click", checkAnswer);
       }
     }
   });
 }
+
+function startQuiz() {
+  // lets create an event listener on the startBtn element
+
+  startBtn.addEventListener("click", function () {
+    console.log("start button clicked");
+
+    // lets start the timer to countdown from 30 seconds
+    // startTimer();
+    renderQuestions(questionsArr);
+  });
+}
+
+startQuiz();
+
+/*  ----------------------------------------------------------------------- */
+
+// the renderQuestions function
+
+// function renderQuestions(questionChoices) {
+//   //  lets first make disappear the start screen from the page
+
+//   startScreen.setAttribute("class", "hide");
+
+//   // lets make the div element questions appear by removing the hide class from the element
+
+//   questions.classList.remove("hide");
+
+//   // now we need to loop through the questions array of objects and render the specific properties to the page
+
+//   // lets create a variable to store the current index of object in the array
+
+//   let currentIndex = 0;
+
+//   // lets get the child element of questions element
+
+//   const choicesEl = questions.children[1];
+
+//   questionChoices.forEach((question, index, array) => {
+//     // this console logs all the objects to the console
+//     // console.log(question);
+//     // console.log(index);
+//     // console.log(array[index]);
+
+//     console.log(question === array[index]);
+
+//     // since its an array of objects we need to set the index on the array
+//     // if the currentIndex == 0 then this logs the first object
+//     // console.log(questionsArr[currentIndex]);
+
+//     // we need to the following code until the array is complete
+
+//     if (index != questionChoices.length) {
+//       for (const key of Object.keys(questionChoices)) {
+//         console.log(questionChoices[key]);
+//       }
+
+//       if (question.hasAnswered === false) {
+//         console.log("not answered");
+
+//         const questionTitle = question.question;
+
+//         questions.children[0].textContent = questionTitle;
+
+//         for (const choice of question.choices) {
+//           // console.log(choice);
+
+//           // lets create all the elements for the buttons on the page
+
+//           const choiceBtn = document.createElement("button");
+
+//           // lets append it to the div element choices but first we need to query select the div element
+
+//           choicesEl.appendChild(choiceBtn);
+
+//           choiceBtn.setAttribute("class", "button");
+
+//           choiceBtn.textContent = choice;
+
+//           choiceBtn.addEventListener("click", function () {
+//             console.log(choiceBtn.textContent);
+
+//             if (choiceBtn.textContent === question.answer) {
+//               // lets mutate the isCorrect key value of the questions object
+
+//               question.isCorrect = true;
+
+//               feedback.classList.remove("hide");
+
+//               // lets create a h2 element on the feedback div container
+
+//               feedbackPara = document.createElement("p");
+
+//               // lets append this to the div element
+
+//               feedback.appendChild(feedbackPara);
+
+//               feedbackPara.textContent = "Correct!";
+//             } else {
+//               question.isCorrect = false;
+
+//               // lets invoke the timer function and pass in a penality time
+
+//               startTimer(question, 10);
+
+//               feedback.classList.remove("hide");
+
+//               feedbackPara = document.createElement("p");
+
+//               // lets append this to the div element
+
+//               feedback.appendChild(feedbackPara);
+
+//               feedbackPara.textContent = "Wrong!";
+//             }
+//           });
+//         }
+//       }
+//     }
+//   });
+// }
 
 // lets create another function here to generate the next question
 
@@ -359,13 +459,13 @@ function renderQuestions(questionChoices) {
 
 // lets create a clearScreen function
 
-function clearScreen() {
-  questions.children[0].textContent = "";
-  questions.children[1].remove();
+// function clearScreen() {
+//   questions.children[0].textContent = "";
+//   questions.children[1].remove();
 
-  feedback.textContent = "";
-}
+//   feedback.textContent = "";
+// }
 
-startQuiz();
+// startQuiz();
 
 // renderQuestions();
