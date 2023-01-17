@@ -142,6 +142,8 @@ console.log(endScreen);
 console.log(feedback);
 console.log(time);
 
+// global variables
+
 // all helper functions
 
 //  the timer function
@@ -229,7 +231,7 @@ function makeAppear(whatEl, element) {
   // Making element choices appear on page
 
   if (whatEl === "answers") {
-    // lets create the button on the page
+    // lets create the buttons on the page - seemed to have to make this a global variable ??
 
     const answerBtn = document.createElement("button");
 
@@ -237,7 +239,7 @@ function makeAppear(whatEl, element) {
 
     const answerEl = questions.children[1];
 
-    console.log(answerEl);
+    // console.log(answerEl);
 
     // lets append the buttons to the element here
 
@@ -247,21 +249,27 @@ function makeAppear(whatEl, element) {
 
     answerBtn.textContent = element;
 
-    return answerBtn;
+    console.log(questions);
   }
 }
 
 // checkAnswer function
 
-function checkAnswer() {
+function checkAnswer(answer) {
   console.log("Checking the answer");
+
+  console.log(answer);
+
+  if (answer === answerBtn.textContent) {
+    console.log("correct answer");
+  }
 }
 
 // main functions
 
 // renderQuestions function
 
-// lets create a global variable to keep track of the current index
+// lets create a global variables
 
 let currentIndex = 0;
 
@@ -272,32 +280,34 @@ function renderQuestions(questions) {
 
   cleanUpEls("startScreen");
 
-  questions.forEach((currentQuestion, questionNumber) => {
+  questions.forEach((currentQuestion, questionNumber, questionArr) => {
     console.log("in the forEach");
     console.log(currentQuestion);
+    console.log(questionArr.length);
 
-    makeAppear("question", currentQuestion);
+    if (currentIndex === questionNumber) {
+      makeAppear("question", currentQuestion);
+    }
 
     // we need to loop through the object of answers
     // and pass to makeAppear function
 
     for (const answer in currentQuestion.answers) {
       if (currentIndex === questionNumber) {
+        console.log(answer);
         console.log(currentQuestion.answers[answer]);
-        const answerBtn = makeAppear(
-          "answers",
-          currentQuestion.answers[answer]
-        );
-
-        console.log(answerBtn);
-
-        answerBtn.addEventListener("click", checkAnswer);
+        makeAppear("answers", currentQuestion.answers[answer]);
       }
     }
   });
 }
 
 function startQuiz() {
+  const choices = document.getElementById("choices");
+  const allButtons = choices.children;
+
+  console.log(choices);
+  console.log(allButtons);
   // lets create an event listener on the startBtn element
 
   startBtn.addEventListener("click", function () {
@@ -307,6 +317,14 @@ function startQuiz() {
     // startTimer();
     renderQuestions(questionsArr);
   });
+
+  // lets create an event listener on all the buttons
+
+  // checkAnswer(currentQuestion.answers[answer]);
+
+  const btnArr = Array.from(allButtons);
+
+  console.log(btnArr);
 }
 
 startQuiz();
