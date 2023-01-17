@@ -142,7 +142,11 @@ console.log(endScreen);
 console.log(feedback);
 console.log(time);
 
+console.log(questionsArr);
+
 // global variables
+
+let answerBtn;
 
 // all helper functions
 
@@ -233,7 +237,7 @@ function makeAppear(whatEl, element) {
   if (whatEl === "answers") {
     // lets create the buttons on the page - seemed to have to make this a global variable ??
 
-    const answerBtn = document.createElement("button");
+    answerBtn = document.createElement("button");
 
     // lets first select the div element to append the elements
 
@@ -251,17 +255,40 @@ function makeAppear(whatEl, element) {
 
     console.log(questions);
   }
+
+  // Making feedback text appear when user gets answer correct
+
+  if (whatEl === "correct" || "incorrect") {
+    if (whatEl === "correct") {
+      // questionArr.isCorrect = true;
+
+      feedback.classList.remove("hide");
+
+      // lets create a h2 element on the feedback div container
+
+      feedbackPara = document.createElement("p");
+
+      // lets append this to the div element
+
+      feedback.appendChild(feedbackPara);
+
+      feedbackPara.textContent = "Correct!";
+    }
+  }
 }
 
 // checkAnswer function
 
-function checkAnswer(answer) {
+function checkAnswer(choice, answer) {
   console.log("Checking the answer");
 
-  console.log(answer);
+  console.log(choice);
+  console.log(answer.correctAnswer);
 
-  if (answer === answerBtn.textContent) {
+  if (choice === answer.correctAnswer) {
     console.log("correct answer");
+
+    makeAppear("correct", answer);
   }
 }
 
@@ -275,6 +302,12 @@ let currentIndex = 0;
 
 function renderQuestions(questions) {
   console.log(questions);
+
+  // lets get the element for the buttons
+
+  const choices = document.getElementById("choices");
+
+  console.log(choices);
 
   // lets invoke the cleanUpEls function
 
@@ -295,19 +328,22 @@ function renderQuestions(questions) {
     for (const answer in currentQuestion.answers) {
       if (currentIndex === questionNumber) {
         console.log(answer);
-        console.log(currentQuestion.answers[answer]);
+        console.log(currentQuestion.correctAnswer);
         makeAppear("answers", currentQuestion.answers[answer]);
       }
+    }
+
+    if (currentIndex === questionNumber) {
+      choices.addEventListener("click", function (e) {
+        console.log(e);
+
+        checkAnswer(e.target.textContent, currentQuestion);
+      });
     }
   });
 }
 
 function startQuiz() {
-  const choices = document.getElementById("choices");
-  const allButtons = choices.children;
-
-  console.log(choices);
-  console.log(allButtons);
   // lets create an event listener on the startBtn element
 
   startBtn.addEventListener("click", function () {
@@ -317,14 +353,6 @@ function startQuiz() {
     // startTimer();
     renderQuestions(questionsArr);
   });
-
-  // lets create an event listener on all the buttons
-
-  // checkAnswer(currentQuestion.answers[answer]);
-
-  const btnArr = Array.from(allButtons);
-
-  console.log(btnArr);
 }
 
 startQuiz();
