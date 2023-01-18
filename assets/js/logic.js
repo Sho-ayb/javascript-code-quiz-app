@@ -221,7 +221,13 @@ function cleanUpEls(screen) {
   if (screen === "questionScreen") {
     console.log("Cleaning question screen");
 
-    answerBtn.remove(); // removes all the button elements from the page
+    prevBtns = questions.children[1];
+
+    console.log(prevBtns);
+
+    // prevBtns.remove();
+
+    // answerBtn.remove(); // removes all the button elements from the page
 
     // we also need to clear the feedback element from the page, lets wrap this within a setTimeout function to remove the element after 2 secs
 
@@ -269,7 +275,7 @@ function makeAppear(whatEl, element) {
 
     answerBtn.textContent = element;
 
-    console.log(questions);
+    console.log(answerBtn);
   }
 
   // Making feedback text appear when user gets answer correct
@@ -361,8 +367,7 @@ function renderQuestions(questions) {
 
     for (const answer in currentQuestion.answers) {
       if (currentIndex === questionNumber) {
-        console.log(answer);
-        console.log(currentQuestion.correctAnswer);
+        // console.log(currentQuestion.correctAnswer);
         makeAppear("answers", currentQuestion.answers[answer]);
       }
     }
@@ -392,6 +397,8 @@ function nextQuestion() {
 
   cleanUpEls("questionScreen");
   renderQuestions(questionsArr);
+
+  console.log(answerBtn);
 }
 
 function startQuiz() {
