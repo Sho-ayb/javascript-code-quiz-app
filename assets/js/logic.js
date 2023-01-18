@@ -146,7 +146,7 @@ console.log(questionsArr);
 
 // global variables
 
-let answerBtn;
+// let answerBtn;   // dont need this as global
 
 // all helper functions
 
@@ -237,7 +237,7 @@ function makeAppear(whatEl, element) {
   if (whatEl === "answers") {
     // lets create the buttons on the page - seemed to have to make this a global variable ??
 
-    answerBtn = document.createElement("button");
+    const answerBtn = document.createElement("button");
 
     // lets first select the div element to append the elements
 
@@ -258,7 +258,7 @@ function makeAppear(whatEl, element) {
 
   // Making feedback text appear when user gets answer correct
 
-  if (whatEl === "correct" || "incorrect") {
+  if (whatEl === "correct" || whatEl === "incorrect") {
     if (whatEl === "correct") {
       // questionArr.isCorrect = true;
 
@@ -273,6 +273,22 @@ function makeAppear(whatEl, element) {
       feedback.appendChild(feedbackPara);
 
       feedbackPara.textContent = "Correct!";
+    }
+
+    if (whatEl === "incorrect") {
+      // questionArr.isCorrect = true;
+
+      feedback.classList.remove("hide");
+
+      // lets create a h2 element on the feedback div container
+
+      feedbackPara = document.createElement("p");
+
+      // lets append this to the div element
+
+      feedback.appendChild(feedbackPara);
+
+      feedbackPara.textContent = "Wrong!";
     }
   }
 }
@@ -289,6 +305,12 @@ function checkAnswer(choice, answer) {
     console.log("correct answer");
 
     makeAppear("correct", answer);
+  }
+
+  if (choice != answer.correctAnswer) {
+    console.log("incorrect answer");
+
+    makeAppear("incorrect", answer);
   }
 }
 
@@ -349,7 +371,7 @@ function startQuiz() {
   startBtn.addEventListener("click", function () {
     console.log("start button clicked");
 
-    // lets start the timer to countdown from 30 seconds
+    // lets start the timer to countdown from seconds
     // startTimer();
     renderQuestions(questionsArr);
   });
