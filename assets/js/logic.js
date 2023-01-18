@@ -144,9 +144,13 @@ console.log(time);
 
 console.log(questionsArr);
 
-// global variables
+// lets create a global variables
 
-// let answerBtn;   // dont need this as global
+let currentIndex = 0;
+
+let answerBtn; // need to be global so buttons can be cleared from view
+
+console.log(answerBtn);
 
 // all helper functions
 
@@ -207,11 +211,23 @@ function startTimer(questionObj, penality) {
 
 // cleanUpEls function
 
-function cleanUpEls(element) {
-  if (element === "startScreen") {
+function cleanUpEls(screen) {
+  if (screen === "startScreen") {
     console.log("Cleaning start screen");
 
     startScreen.setAttribute("class", "hide");
+  }
+
+  if (screen === "questionScreen") {
+    console.log("Cleaning question screen");
+
+    answerBtn.remove(); // removes all the button elements from the page
+
+    // we also need to clear the feedback element from the page, lets wrap this within a setTimeout function to remove the element after 2 secs
+
+    setTimeout(() => {
+      feedback.classList.add("hide");
+    }, 1100);
   }
 }
 
@@ -237,7 +253,7 @@ function makeAppear(whatEl, element) {
   if (whatEl === "answers") {
     // lets create the buttons on the page - seemed to have to make this a global variable ??
 
-    const answerBtn = document.createElement("button");
+    answerBtn = document.createElement("button");
 
     // lets first select the div element to append the elements
 
@@ -318,10 +334,6 @@ function checkAnswer(choice, answer) {
 
 // renderQuestions function
 
-// lets create a global variables
-
-let currentIndex = 0;
-
 function renderQuestions(questions) {
   console.log(questions);
 
@@ -360,9 +372,26 @@ function renderQuestions(questions) {
         console.log(e);
 
         checkAnswer(e.target.textContent, currentQuestion);
+
+        // when a button is clicked we should invoke this function again to render the next questions
+
+        nextQuestion();
       });
     }
   });
+
+  // lets now increment the currentIndex variable here
+
+  currentIndex++;
+}
+
+// lets create a function that invokes the renderQuestions function again
+
+function nextQuestion() {
+  // before invoking the function nextQuestion, we should clear the question buttons from the page
+
+  cleanUpEls("questionScreen");
+  renderQuestions(questionsArr);
 }
 
 function startQuiz() {
