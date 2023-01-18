@@ -18,7 +18,6 @@ const questionsArr = [
     },
     correctAnswer: "all of the above",
     isCorrect: false,
-    hasAnswered: false,
   },
   {
     question: "Which of these commonly used data types is not a data type ? ",
@@ -31,6 +30,17 @@ const questionsArr = [
     },
     correctAnswer: "alerts",
     isCorrect: false,
-    hasAnswered: false,
+  },
+  {
+    question: "Which of the below choices is a loop in Javascript",
+    answers: {
+      a: "reduce",
+      b: "map",
+      c: "for of",
+      d: "JSON.stringify",
+      e: "includes",
+    },
+    correctAnswer: "for of",
+    isCorrect: false,
   },
 ];

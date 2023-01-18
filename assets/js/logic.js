@@ -148,9 +148,9 @@ console.log(questionsArr);
 
 let currentIndex = 0;
 
-let answerBtn; // need to be global so buttons can be cleared from view
+// let answerBtn; // need to be global so buttons can be cleared from view
 
-console.log(answerBtn);
+// console.log(answerBtn);
 
 // all helper functions
 
@@ -221,14 +221,16 @@ function cleanUpEls(screen) {
   if (screen === "questionScreen") {
     console.log("Cleaning question screen");
 
-    prevBtns = questions.children[1];
+    // lets get the parent element choices to clean up the button elements that were created in renderQuestions function
 
-    console.log(prevBtns);
+    const choices = document.getElementById("choices");
 
-    // prevBtns.remove();
+    // lets loop through the elements using a while loop and remove each child
+    //https://www.javascripttutorial.net/dom/manipulating/remove-all-child-nodes/
 
-    // answerBtn.remove(); // removes all the button elements from the page
-
+    while (choices.firstChild) {
+      choices.removeChild(choices.firstChild);
+    }
     // we also need to clear the feedback element from the page, lets wrap this within a setTimeout function to remove the element after 2 secs
 
     setTimeout(() => {
@@ -259,17 +261,23 @@ function makeAppear(whatEl, element) {
   if (whatEl === "answers") {
     // lets create the buttons on the page - seemed to have to make this a global variable ??
 
-    answerBtn = document.createElement("button");
+    const choices = document.getElementById("choices");
+
+    console.log(choices);
+
+    const answerBtn = document.createElement("button");
 
     // lets first select the div element to append the elements
 
-    const answerEl = questions.children[1];
+    // const answerEl = questions.children[1];
+
+    choices.appendChild(answerBtn);
 
     // console.log(answerEl);
 
     // lets append the buttons to the element here
 
-    answerEl.appendChild(answerBtn);
+    // answerEl.appendChild(answerBtn);
 
     // lets insert the text in to buttons
 
@@ -343,31 +351,61 @@ function checkAnswer(choice, answer) {
 function renderQuestions(questions) {
   console.log(questions);
 
-  // lets get the element for the buttons
+  // lets get the parent element for the buttons, so we can attach an event listener to it
 
   const choices = document.getElementById("choices");
 
   console.log(choices);
 
-  // lets invoke the cleanUpEls function
+  // lets invoke the cleanUpEls function and the choices parent element of answer buttons
 
   cleanUpEls("startScreen");
+  cleanUpEls("questionScreen");
 
   questions.forEach((currentQuestion, questionNumber, questionArr) => {
     console.log("in the forEach");
     console.log(currentQuestion);
-    console.log(questionArr.length);
+    console.log(questionArr);
 
     if (currentIndex === questionNumber) {
+      console.log(
+        "current index:",
+        currentIndex,
+        "question number:",
+        questionNumber
+      );
+
       makeAppear("question", currentQuestion);
     }
 
     // we need to loop through the object of answers
     // and pass to makeAppear function
 
-    for (const answer in currentQuestion.answers) {
-      if (currentIndex === questionNumber) {
-        // console.log(currentQuestion.correctAnswer);
+    // for (const answer in currentQuestion.answers) {
+    //   console.log("inside for in loop");
+
+    //   console.log(
+    //     "current index:",
+    //     currentIndex,
+    //     "question number: ",
+    //     questionNumber
+    //   );
+
+    //   if (currentIndex === questionNumber) {
+    //     // console.log(currentQuestion.correctAnswer);
+    //     makeAppear("answers", currentQuestion.answers[answer]);
+    //   }
+    // }
+
+    if (currentIndex === questionNumber) {
+      console.log(
+        "current index:",
+        currentIndex,
+        "question number: ",
+        questionNumber
+      );
+
+      for (const answer in currentQuestion.answers) {
         makeAppear("answers", currentQuestion.answers[answer]);
       }
     }
@@ -387,18 +425,14 @@ function renderQuestions(questions) {
 
   // lets now increment the currentIndex variable here
 
-  currentIndex++;
+  // currentIndex++;
 }
 
 // lets create a function that invokes the renderQuestions function again
 
 function nextQuestion() {
-  // before invoking the function nextQuestion, we should clear the question buttons from the page
-
-  cleanUpEls("questionScreen");
+  currentIndex++;
   renderQuestions(questionsArr);
-
-  console.log(answerBtn);
 }
 
 function startQuiz() {
