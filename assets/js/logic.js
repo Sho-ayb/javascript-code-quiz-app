@@ -134,9 +134,17 @@ const feedback = document.getElementById("feedback");
 
 const time = document.getElementById("time");
 
-// VARIABLES
+// GLOBAL VARIABLES
 
-// function for the start quiz button
+// we need a variable to keep track of the index of the array of objects
+
+let currentIndex = 0;
+
+// we need a variable to keep track of the current question in the arrays of objects
+
+let currentQuestion = questionsArr[currentIndex]; // we will increment currentIndex below
+
+// functions for event handlers
 
 const startQuizHandler = (handler) => {
   // lets attach an event listener to the startBtn
@@ -146,7 +154,29 @@ const startQuizHandler = (handler) => {
 
     // lets hide the start screen by calling the function
     cleanUpStart();
+
+    // lets invoke the buildQuiz function
     handler();
+
+    answerBtnHandler();
+  });
+};
+
+const answerBtnHandler = (handler) => {
+  const list = document.querySelector(".list");
+
+  console.log(list);
+
+  const li = list.children;
+
+  console.log(li);
+
+  Array.from(li).forEach((button) => {
+    console.log(button);
+
+    button.addEventListener("click", function (e) {
+      console.log("Button Clicked");
+    });
   });
 };
 
@@ -158,20 +188,14 @@ const cleanUpStart = () => {
 
 // function for the questions page
 
-const buildQuizHandler = () => {
-  // we need a variable to keep track of the index of the array of objects
-
-  let currentIndex = 0;
-
-  // we need a variable to keep track of the current question in the arrays of objects
-
-  let currentQuestion = questionsArr[currentIndex]; // we will increment currentIndex below
-
-  console.log(currentQuestion);
-
+const buildQuiz = () => {
   // lets create an ordered list for the page
 
   const ol = document.createElement("ol");
+
+  // lets give our ol a class name
+
+  ol.setAttribute("class", "list");
 
   // lets query select the choices div element from html
 
@@ -225,7 +249,7 @@ const buildQuizHandler = () => {
 
 const init = () => {
   // lets pass in a function to the handler
-  startQuizHandler(buildQuizHandler);
+  startQuizHandler(buildQuiz);
 };
 
 // lets invoke the init function
