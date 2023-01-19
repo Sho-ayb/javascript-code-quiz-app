@@ -169,13 +169,19 @@ const buildQuizHandler = () => {
 
   console.log(currentQuestion);
 
-  // lets create an unordered list for the page
+  // lets create an ordered list for the page
 
-  const ul = document.createElement("ul");
+  const ol = document.createElement("ol");
 
   // lets query select the choices div element from html
 
   const choices = document.querySelector(".choices");
+
+  // lets append the ordered list element to choices div
+
+  choices.appendChild(ol);
+
+  console.log(choices);
 
   // lets first unhide the questions div container here
 
@@ -188,18 +194,29 @@ const buildQuizHandler = () => {
     // lets create a for loop here to extract the answers data we need from the array of objects
 
     for (let i = currentIndex; i < currentQuestion.answers.length; i++) {
-      // const answers = currentQuestion[i].answers;
-      // console.log(answers);
-
       const answer = currentQuestion.answers[i]; // will pull each answer from the array
 
-      console.log(answer);
+      // lets create list item elements to hold our buttons
+
+      const li = document.createElement("li");
+
+      console.log(li);
+
+      // lets append each list item element to the ol element
+
+      ol.appendChild(li);
 
       // lets create button elements for the page
 
       const answerBtn = document.createElement("button");
 
-      // lets append each button to the choices div element
+      // lets append each button to the choices div element within each order list - list item
+
+      li.appendChild(answerBtn);
+
+      // lets apply the text from the answers array in to buttons text content
+
+      answerBtn.textContent = answer;
     }
   }
 };
