@@ -133,16 +133,86 @@ const endScreen = document.getElementById("end-screen");
 const feedback = document.getElementById("feedback");
 
 const time = document.getElementById("time");
-// console.log(timer.children[0]);
 
-console.log(startBtn);
-console.log(startScreen);
-console.log(questions);
-console.log(endScreen);
-console.log(feedback);
-console.log(time);
+// VARIABLES
 
-console.log(questionsArr);
+// function for the start quiz button
+
+const startQuizHandler = (cleanup) => {
+  // lets attach an event listener to the startBtn
+
+  startBtn.addEventListener("click", function () {
+    console.log("Quiz Challenge Started");
+
+    // lets hide the start screen by calling the function
+
+    cleanup();
+  });
+};
+
+// lets create a function to clean up the start screen
+
+const cleanUpStart = () => {
+  startScreen.setAttribute("class", "hide");
+};
+
+// function for the questions page
+
+const buildQuizHandler = () => {
+  // we need a variable to keep track of the index of the array of objects
+
+  let currentIndex = 0;
+
+  // lets first unhide the questions div container here
+
+  questions.classList.remove("hide");
+
+  // lets create a for loop here to extract the data we need from the array of objects
+
+  for (let i = currentIndex; i < questionsArr.length; i++) {
+    // we need to keep track if the user has answered all questions
+
+    if (currentIndex <= questionsArr.length) {
+      // we can now loop through these objects and extract the title and answers object
+      // we need to only output each question and its answers at a time
+
+      for (let question in questionsArr) {
+        console.log(questionsArr[question]);
+      }
+    }
+  }
+};
+
+// lets create an init() function here - we will invoke all the event handlers here
+
+const init = () => {
+  // lets pass in a function to the handler
+  startQuizHandler(cleanUpStart);
+  buildQuizHandler();
+};
+
+// lets invoke the init function
+
+init();
+
+/* 
+
+
+STARTING ALL OVER AGAIN AS THIS CODE NOT WORKING CORRECTLY AND NO ERROR REGISTERING IN CONSOLE EITHER - THE ANSWERS IN THE ARRAY ARE CREATED BUT THEN IS BEING CLEARED FROM THE PAGE. I THINK IT IS PROBLEM WITH HOW THE CODE HAS BEEN STRUCTURED WHERE THE QUESTIONS ARE EXTRACTED FROM THE ARRAY OF OBJECTS - questions.js file - AND THEN PASSED TO FUNCTION - makeAppear - that renders the button elements on to the page with the currentQuestion being passed to it - THIS WORKS FOR THE FIRST TWO OBJECTS BUT THEN THE THIRD OBJECT OF QUESTIONS DOES NOT APPEAR ON THE PAGE.
+
+
+// second attempt 
+
+
+// selecting all the elements on the page we need
+
+const startBtn = document.getElementById("start");
+const startScreen = document.getElementById("start-screen");
+const questions = document.getElementById("questions");
+const endScreen = document.getElementById("end-screen");
+const feedback = document.getElementById("feedback");
+
+const time = document.getElementById("time");
 
 // lets create a global variables
 
@@ -245,8 +315,6 @@ function makeAppear(whatEl, element) {
   if (whatEl === "question") {
     console.log("inside whatEl");
 
-    console.log(element.question);
-
     questions.classList.remove("hide");
 
     const questionTitle = element.question;
@@ -263,27 +331,11 @@ function makeAppear(whatEl, element) {
 
     const choices = document.getElementById("choices");
 
-    console.log(choices);
-
     const answerBtn = document.createElement("button");
-
-    // lets first select the div element to append the elements
-
-    // const answerEl = questions.children[1];
 
     choices.appendChild(answerBtn);
 
-    // console.log(answerEl);
-
-    // lets append the buttons to the element here
-
-    // answerEl.appendChild(answerBtn);
-
-    // lets insert the text in to buttons
-
     answerBtn.textContent = element;
-
-    console.log(answerBtn);
   }
 
   // Making feedback text appear when user gets answer correct
@@ -349,8 +401,6 @@ function checkAnswer(choice, answer) {
 // renderQuestions function
 
 function renderQuestions(questions) {
-  console.log(questions);
-
   // lets get the parent element for the buttons, so we can attach an event listener to it
 
   const choices = document.getElementById("choices");
@@ -364,8 +414,6 @@ function renderQuestions(questions) {
 
   questions.forEach((currentQuestion, questionNumber, questionArr) => {
     console.log("in the forEach");
-    console.log(currentQuestion);
-    console.log(questionArr);
 
     if (currentIndex === questionNumber) {
       console.log(
@@ -449,7 +497,11 @@ function startQuiz() {
 
 startQuiz();
 
+*/
+
 /*  ----------------------------------------------------------------------- */
+
+// first attempt
 
 // the renderQuestions function
 
