@@ -138,15 +138,15 @@ const time = document.getElementById("time");
 
 // function for the start quiz button
 
-const startQuizHandler = (cleanup) => {
+const startQuizHandler = (handler) => {
   // lets attach an event listener to the startBtn
 
   startBtn.addEventListener("click", function () {
     console.log("Quiz Challenge Started");
 
     // lets hide the start screen by calling the function
-
-    cleanup();
+    cleanUpStart();
+    handler();
   });
 };
 
@@ -163,22 +163,43 @@ const buildQuizHandler = () => {
 
   let currentIndex = 0;
 
+  // we need a variable to keep track of the current question in the arrays of objects
+
+  let currentQuestion = questionsArr[currentIndex]; // we will increment currentIndex below
+
+  console.log(currentQuestion);
+
+  // lets create an unordered list for the page
+
+  const ul = document.createElement("ul");
+
+  // lets query select the choices div element from html
+
+  const choices = document.querySelector(".choices");
+
   // lets first unhide the questions div container here
 
   questions.classList.remove("hide");
 
-  // lets create a for loop here to extract the data we need from the array of objects
+  if (currentIndex <= questionsArr.length) {
+    document.getElementById("question-title").textContent =
+      currentQuestion.question;
 
-  for (let i = currentIndex; i < questionsArr.length; i++) {
-    // we need to keep track if the user has answered all questions
+    // lets create a for loop here to extract the answers data we need from the array of objects
 
-    if (currentIndex <= questionsArr.length) {
-      // we can now loop through these objects and extract the title and answers object
-      // we need to only output each question and its answers at a time
+    for (let i = currentIndex; i < currentQuestion.answers.length; i++) {
+      // const answers = currentQuestion[i].answers;
+      // console.log(answers);
 
-      for (let question in questionsArr) {
-        console.log(questionsArr[question]);
-      }
+      const answer = currentQuestion.answers[i]; // will pull each answer from the array
+
+      console.log(answer);
+
+      // lets create button elements for the page
+
+      const answerBtn = document.createElement("button");
+
+      // lets append each button to the choices div element
     }
   }
 };
@@ -187,8 +208,7 @@ const buildQuizHandler = () => {
 
 const init = () => {
   // lets pass in a function to the handler
-  startQuizHandler(cleanUpStart);
-  buildQuizHandler();
+  startQuizHandler(buildQuizHandler);
 };
 
 // lets invoke the init function

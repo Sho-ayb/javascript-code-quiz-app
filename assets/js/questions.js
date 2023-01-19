@@ -9,35 +9,17 @@ This file contains the data to store all of the question objects
 const questionsArr = [
   {
     question: "What data types can an array store ?",
-    answers: {
-      a: "string",
-      b: "boolean",
-      c: "numbers",
-      d: "objects",
-      e: "all of the above",
-    },
+    answers: ["string", "boolean", "numbers", "objects", "all of the above"],
     correctAnswer: "all of the above",
   },
   {
     question: "Which of these commonly used data types is not a data type ? ",
-    answers: {
-      a: "string",
-      b: "boolean",
-      c: "numbers",
-      d: "objects",
-      e: "alerts",
-    },
+    answers: ["string", "boolean", "numbers", "objects", "alerts"],
     correctAnswer: "alerts",
   },
   {
     question: "Which of the below choices is a loop in Javascript",
-    answers: {
-      a: "reduce",
-      b: "map",
-      c: "for of",
-      d: "JSON.stringify",
-      e: "includes",
-    },
+    answers: ["reduce", "map", "for of", "JSON.stringify", "includes"],
     correctAnswer: "for of",
   },
 ];
