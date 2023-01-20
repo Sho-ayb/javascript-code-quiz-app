@@ -148,6 +148,8 @@ let currentQuestion = questionsArr[currentIndex]; // we will increment currentIn
 
 let score = 0; // need to set the value to zero first
 
+console.log("current index: ", currentIndex);
+
 // functions for event handlers
 
 const startQuizHandler = (buildQuiz, answerBtn) => {
@@ -323,12 +325,13 @@ const buildQuiz = () => {
   questions.classList.remove("hide");
 
   if (currentIndex <= questionsArr.length) {
+    // lets insert the title on the page
     document.getElementById("question-title").textContent =
       currentQuestion.question;
 
     // lets create a for loop here to extract the answers data we need from the array of objects
 
-    for (let i = currentIndex; i < currentQuestion.answers.length; i++) {
+    for (let i = 0; i < currentQuestion.answers.length; i++) {
       const answer = currentQuestion.answers[i]; // will pull each answer from the array
 
       // lets create list item elements to hold our buttons
