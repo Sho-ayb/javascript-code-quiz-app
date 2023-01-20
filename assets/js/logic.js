@@ -126,11 +126,11 @@ questionsArr  - this is stored within the questions.js file
 
 // selecting all the elements on the page we need
 
-const startBtn = document.getElementById("start");
-const startScreen = document.getElementById("start-screen");
-const questions = document.getElementById("questions");
-const endScreen = document.getElementById("end-screen");
-const feedback = document.getElementById("feedback");
+const startBtnEl = document.getElementById("start");
+const startScreenEl = document.getElementById("start-screen");
+const questionsEl = document.getElementById("questions");
+const endScreenEl = document.getElementById("end-screen");
+const feedbackEl = document.getElementById("feedback");
 
 const time = document.getElementById("time");
 
@@ -144,46 +144,157 @@ let currentIndex = 0;
 
 let currentQuestion = questionsArr[currentIndex]; // we will increment currentIndex below
 
+// we need a variable to keep the score when the user gets answer correct
+
+let score = 0; // need to set the value to zero first
+
 // functions for event handlers
 
-const startQuizHandler = (handler) => {
+const startQuizHandler = (buildQuiz, answerBtn) => {
   // lets attach an event listener to the startBtn
 
-  startBtn.addEventListener("click", function () {
+  startBtnEl.addEventListener("click", function () {
     console.log("Quiz Challenge Started");
 
     // lets hide the start screen by calling the function
     cleanUpStart();
 
     // lets invoke the buildQuiz function
-    handler();
+    buildQuiz();
 
-    answerBtnHandler();
+    answerBtn();
   });
 };
 
-const answerBtnHandler = (handler) => {
-  const list = document.querySelector(".list");
+const answerBtnHandler = () => {
+  // const listItem = document.querySelectorAll(".list-item");
 
-  console.log(list);
+  // console.log(listItem);
 
-  const li = list.children;
+  // const li = list.children; // returns HTMLCollection
 
-  console.log(li);
+  // console.log(li);
 
-  Array.from(li).forEach((button) => {
-    console.log(button);
+  // const answerBtns = listItem.querySelectorAll("button"); // returns NodeList if used with document otherwise returns listItem is a not function
 
-    button.addEventListener("click", function (e) {
+  // console.log(answerBtns);
+
+  // need to convert to an array because li.children returns a HTMLCollection
+
+  // Array.from(li).forEach((button) => {
+  //   console.log(button);
+
+  //   button.addEventListener("click", function (e) {
+  //     console.log("Button Clicked");
+  //   });
+  // });
+
+  const answerBtn = document.querySelectorAll(".answer-button");
+
+  console.log(answerBtn); // returns a node list
+
+  // answerBtn.addEventListener("click", function () {
+  //   console.log("button click");
+  // });
+
+  answerBtn.forEach((btn) => {
+    btn.addEventListener("click", function () {
       console.log("Button Clicked");
+
+      console.log(btn.textContent);
+      console.log(currentQuestion.correctAnswer);
+
+      if (btn.textContent === currentQuestion.correctAnswer) {
+        // lets invoke fn to provide feedback to user
+        feedback("correct");
+        // lets invoke fn to update the users score
+        quizScore();
+        // lets invoke fn to clean up the questions and feedback from the page
+        cleanUpQuiz();
+        // lets update the currentIndex here
+        currentIndex++;
+        // lets now invoke the buildQuiz function to generate the next questions from the array of objects
+        buildQuiz();
+      }
+
+      if (btn.textContent !== currentQuestion.correctAnswer) {
+        feedback("incorrect");
+        // lets invoke fn to update the users score
+        quizScore();
+        // lets invoke fn to clean up the questions and feedback from the page
+        cleanUpQuiz();
+        // lets update the currentIndex here
+        currentIndex++;
+        // lets now invoke the buildQuiz function to generate the next questions from the array of objects
+        buildQuiz();
+      }
     });
   });
+};
+
+// lets create a function to keep the users scores
+
+const quizScore = () => {
+  score += 1;
+
+  console.log("Current Score: ", score);
+};
+
+// lets create a function to provide the user feedback
+
+const feedback = (string) => {
+  feedbackEl.classList.remove("hide");
+
+  if (string === "correct") {
+    // lets create a p element on the feedback div container
+
+    feedbackPara = document.createElement("p");
+
+    // lets append this to the div element
+
+    feedbackEl.appendChild(feedbackPara);
+
+    feedbackPara.textContent = "Correct!";
+  }
+
+  if (string === "incorrect") {
+    // lets create a p element on the feedback div container
+
+    feedbackPara = document.createElement("p");
+
+    // lets append this to the div element
+
+    feedbackEl.appendChild(feedbackPara);
+
+    feedbackPara.textContent = "Wrong!";
+  }
+};
+
+// lets create a function to clean up the question elements
+
+const cleanUpQuiz = () => {
+  // lets query select the choices element
+
+  const choicesEl = document.querySelector(".choices");
+
+  // lets loop through the elements using a while loop and remove each child
+  //https://www.javascripttutorial.net/dom/manipulating/remove-all-child-nodes/
+
+  while (choicesEl.firstChild) {
+    choicesEl.removeChild(choicesEl.firstChild);
+  }
+
+  // we also need to clear the feedback element from the page, lets wrap this within a setTimeout function to remove the element
+
+  setTimeout(() => {
+    feedbackEl.classList.add("hide");
+  }, 1000);
 };
 
 // lets create a function to clean up the start screen
 
 const cleanUpStart = () => {
-  startScreen.setAttribute("class", "hide");
+  startScreenEl.setAttribute("class", "hide");
 };
 
 // function for the questions page
@@ -199,13 +310,13 @@ const buildQuiz = () => {
 
   // lets query select the choices div element from html
 
-  const choices = document.querySelector(".choices");
+  const choicesEl = document.querySelector(".choices");
 
   // lets append the ordered list element to choices div
 
-  choices.appendChild(ol);
+  choicesEl.appendChild(ol);
 
-  console.log(choices);
+  console.log(choicesEl);
 
   // lets first unhide the questions div container here
 
@@ -224,6 +335,10 @@ const buildQuiz = () => {
 
       const li = document.createElement("li");
 
+      // lets place a class in each list item
+
+      li.setAttribute("class", "list-item");
+
       console.log(li);
 
       // lets append each list item element to the ol element
@@ -233,6 +348,8 @@ const buildQuiz = () => {
       // lets create button elements for the page
 
       const answerBtn = document.createElement("button");
+
+      answerBtn.setAttribute("class", "answer-button");
 
       // lets append each button to the choices div element within each order list - list item
 
@@ -249,7 +366,7 @@ const buildQuiz = () => {
 
 const init = () => {
   // lets pass in a function to the handler
-  startQuizHandler(buildQuiz);
+  startQuizHandler(buildQuiz, answerBtnHandler);
 };
 
 // lets invoke the init function
@@ -362,7 +479,7 @@ function cleanUpEls(screen) {
     while (choices.firstChild) {
       choices.removeChild(choices.firstChild);
     }
-    // we also need to clear the feedback element from the page, lets wrap this within a setTimeout function to remove the element after 2 secs
+    // we also need to clear the feedback element from the page, lets wrap this within a setTimeout function to remove the element
 
     setTimeout(() => {
       feedback.classList.add("hide");
