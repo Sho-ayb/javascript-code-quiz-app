@@ -148,8 +148,6 @@ let currentQuestion = questionsArr[currentIndex]; // we will increment currentIn
 
 let score = 0; // need to set the value to zero first
 
-console.log("current index: ", currentIndex);
-
 // functions for event handlers
 
 const startQuizHandler = (buildQuiz, answerBtn) => {
@@ -163,8 +161,6 @@ const startQuizHandler = (buildQuiz, answerBtn) => {
 
     // lets invoke the buildQuiz function
     buildQuiz();
-
-    answerBtn();
   });
 };
 
@@ -213,22 +209,23 @@ const answerBtnHandler = () => {
         quizScore();
         // lets invoke fn to clean up the questions and feedback from the page
         cleanUpQuiz();
-        // lets update the currentIndex here
-        currentIndex++;
-        // lets now invoke the buildQuiz function to generate the next questions from the array of objects
         buildQuiz();
-      }
-
-      if (btn.textContent !== currentQuestion.correctAnswer) {
+        // lets update the currentIndex here
+        // currentIndex++;
+        // currentQuestion = questionsArr[currentIndex];
+        // lets now invoke the buildQuiz function to generate the next questions from the array of objects
+      } else if (btn.textContent !== currentQuestion.correctAnswer) {
+        console.log("test");
         feedback("incorrect");
         // lets invoke fn to update the users score
         quizScore();
         // lets invoke fn to clean up the questions and feedback from the page
         cleanUpQuiz();
-        // lets update the currentIndex here
-        currentIndex++;
-        // lets now invoke the buildQuiz function to generate the next questions from the array of objects
         buildQuiz();
+        // lets update the currentIndex here
+        // currentIndex++;
+        // currentQuestion = questionsArr[currentIndex];
+        // lets now invoke the buildQuiz function to generate the next questions from the array of objects
       }
     });
   });
@@ -275,16 +272,23 @@ const feedback = (string) => {
 // lets create a function to clean up the question elements
 
 const cleanUpQuiz = () => {
+  console.log("Cleaning up questions");
+  // lets clean up the question title here
+
+  document.getElementById("question-title").textContent = " ";
+
   // lets query select the choices element
 
   const choicesEl = document.querySelector(".choices");
 
+  choicesEl.innerHTML = "";
+
   // lets loop through the elements using a while loop and remove each child
   //https://www.javascripttutorial.net/dom/manipulating/remove-all-child-nodes/
 
-  while (choicesEl.firstChild) {
-    choicesEl.removeChild(choicesEl.firstChild);
-  }
+  // while (choicesEl.firstChild) {
+  //   choicesEl.removeChild(choicesEl.firstChild);
+  // }
 
   // we also need to clear the feedback element from the page, lets wrap this within a setTimeout function to remove the element
 
@@ -302,6 +306,7 @@ const cleanUpStart = () => {
 // function for the questions page
 
 const buildQuiz = () => {
+  console.log("Building Quiz");
   // lets create an ordered list for the page
 
   const ol = document.createElement("ol");
@@ -323,8 +328,11 @@ const buildQuiz = () => {
   // lets first unhide the questions div container here
 
   questions.classList.remove("hide");
+  console.log(currentIndex);
 
-  if (currentIndex <= questionsArr.length) {
+  if (currentIndex < questionsArr.length) {
+    console.log("current index: ", currentIndex);
+
     // lets insert the title on the page
     document.getElementById("question-title").textContent =
       currentQuestion.question;
@@ -354,6 +362,34 @@ const buildQuiz = () => {
 
       answerBtn.setAttribute("class", "answer-button");
 
+      // answerBtn.addEventListener("click", function (e) {
+      //   console.log(e.target);
+
+      //   // answerBtnHandler();
+      // });
+
+      answerBtn.addEventListener("click", function () {
+        if (answerBtn.textContent === currentQuestion.correctAnswer) {
+          // lets invoke fn to provide feedback to user
+          feedback("correct");
+          // lets invoke fn to update the users score
+          quizScore();
+          // lets invoke fn to clean up the questions and feedback from the page
+          cleanUpQuiz();
+          // lets now invoke the buildQuiz function to generate the next questions from the array of objects
+          buildQuiz();
+        } else if (answerBtn.textContent !== currentQuestion.correctAnswer) {
+          console.log("test");
+          feedback("incorrect");
+          // lets invoke fn to update the users score
+          quizScore();
+          // lets invoke fn to clean up the questions and feedback from the page
+          cleanUpQuiz();
+          // lets now invoke the buildQuiz function to generate the next questions from the array of objects
+          buildQuiz();
+        }
+      });
+
       // lets append each button to the choices div element within each order list - list item
 
       li.appendChild(answerBtn);
@@ -362,6 +398,14 @@ const buildQuiz = () => {
 
       answerBtn.textContent = answer;
     }
+
+    // lets update the currentIndex here
+
+    currentIndex++;
+
+    // we also need to pass the currentIndex to the currentQuestion again
+
+    currentQuestion = questionsArr[currentIndex];
   }
 };
 
