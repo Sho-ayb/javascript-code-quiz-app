@@ -145,6 +145,21 @@ let currentIndex = 0;
 let currentQuestion = questionsArr[currentIndex]; // we will increment currentIndex below
 
 // we need a variable to keep the score when the user gets answer correct
+// lets create an object to store the user score and add the final score to localStorage
+
+const Score = {
+  score: 0,
+  initials: "",
+  addScore: function () {
+    this.score += 1;
+  },
+  addFinal: function () {
+    window.localStorage.setItem("finalScore", JSON.stringify(this.score));
+  },
+  addInitials: function () {
+    window.localStorage.setItem("initials", JSON.stringify(this.initials));
+  },
+};
 
 let score = 0; // need to set the value to zero first
 
@@ -180,10 +195,10 @@ const checkAnswer = (button) => {
     quizScore();
     // lets invoke fn to clean up the questions and feedback from the page
     cleanUpQuiz();
-    // lets now invoke the buildQuiz function to generate the next questions from the array of objects
     currentIndex++;
     // we also need to pass the currentIndex to the currentQuestion again
     currentQuestion = questionsArr[currentIndex];
+    // lets now invoke the buildQuiz function to generate the next questions from the array of objects
     buildQuiz();
   } else if (button.textContent !== currentQuestion.correctAnswer) {
     console.log("Got wrong!", button.textContent);
@@ -193,10 +208,10 @@ const checkAnswer = (button) => {
     wrongWav.play();
     // lets invoke fn to clean up the questions and feedback from the page
     cleanUpQuiz();
-    // lets now invoke the buildQuiz function to generate the next questions from the array of objects
     currentIndex++;
     // we also need to pass the currentIndex to the currentQuestion again
     currentQuestion = questionsArr[currentIndex];
+    // lets now invoke the buildQuiz function to generate the next questions from the array of objects
     buildQuiz();
   }
 };
@@ -204,15 +219,15 @@ const checkAnswer = (button) => {
 // lets create a function to keep the users scores
 
 const quizScore = () => {
-  score += 1;
+  Score.addScore();
 
-  console.log("Current Score: ", score);
+  console.log("Current Score: ", Score.score);
 
   // lets query select the span element and add the score to it
 
   const finalScore = document.getElementById("final-score");
 
-  finalScore.textContent = score;
+  finalScore.textContent = Score.score;
 };
 
 // lets create a function to provide the user feedback
@@ -271,6 +286,39 @@ const cleanUpQuiz = () => {
 
 const cleanUpStart = () => {
   startScreenEl.setAttribute("class", "hide");
+};
+
+// end the quiz function
+
+const endQuiz = () => {
+  // lets display the end screen
+  endScreenEl.classList.remove("hide");
+
+  // lets invoke the object method here to store the final score
+  Score.addFinal();
+
+  // lets query select the submit button and attach an event listener
+
+  const submitBtn = document.getElementById("submit");
+
+  submitBtn.addEventListener("click", function (e) {
+    // lets query select the initials element
+
+    const initialsEl = document.getElementById("initials").value;
+    // lets prevent the screen from reloading when user submits the form
+
+    e.preventDefault();
+
+    // lets invoke the object method to add intitials to localStorage
+
+    // lets now add the above initials to the object
+
+    Score.initials = initialsEl;
+
+    // lets now add it to localStorage
+
+    Score.addInitials();
+  });
 };
 
 // function for the questions page
@@ -346,8 +394,9 @@ const buildQuiz = () => {
 
   // if the currentIndex value equals the lenght of the array, let display the end screen element to the page
 
-  if (currentIndex === questionsArr.length)
-    endScreenEl.classList.remove("hide");
+  if (currentIndex === questionsArr.length) {
+    endQuiz();
+  }
 };
 
 // lets create an init() function here - we will invoke all the event handlers here
