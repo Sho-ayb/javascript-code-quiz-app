@@ -164,71 +164,41 @@ const startQuizHandler = (buildQuiz, answerBtn) => {
   });
 };
 
-const answerBtnHandler = () => {
-  // const listItem = document.querySelectorAll(".list-item");
+const checkAnswer = (button) => {
+  // lets create a variable here to assign the HTMLAudioElement interface
 
-  // console.log(listItem);
+  const correctWav = new Audio("../assets/sfx/correct.wav");
+  const wrongWav = new Audio("../assets/sfx/incorrect.wav");
 
-  // const li = list.children; // returns HTMLCollection
-
-  // console.log(li);
-
-  // const answerBtns = listItem.querySelectorAll("button"); // returns NodeList if used with document otherwise returns listItem is a not function
-
-  // console.log(answerBtns);
-
-  // need to convert to an array because li.children returns a HTMLCollection
-
-  // Array.from(li).forEach((button) => {
-  //   console.log(button);
-
-  //   button.addEventListener("click", function (e) {
-  //     console.log("Button Clicked");
-  //   });
-  // });
-
-  const answerBtn = document.querySelectorAll(".answer-button");
-
-  console.log(answerBtn); // returns a node list
-
-  // answerBtn.addEventListener("click", function () {
-  //   console.log("button click");
-  // });
-
-  answerBtn.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      console.log("Button Clicked");
-
-      console.log(btn.textContent);
-      console.log(currentQuestion.correctAnswer);
-
-      if (btn.textContent === currentQuestion.correctAnswer) {
-        // lets invoke fn to provide feedback to user
-        feedback("correct");
-        // lets invoke fn to update the users score
-        quizScore();
-        // lets invoke fn to clean up the questions and feedback from the page
-        cleanUpQuiz();
-        buildQuiz();
-        // lets update the currentIndex here
-        // currentIndex++;
-        // currentQuestion = questionsArr[currentIndex];
-        // lets now invoke the buildQuiz function to generate the next questions from the array of objects
-      } else if (btn.textContent !== currentQuestion.correctAnswer) {
-        console.log("test");
-        feedback("incorrect");
-        // lets invoke fn to update the users score
-        quizScore();
-        // lets invoke fn to clean up the questions and feedback from the page
-        cleanUpQuiz();
-        buildQuiz();
-        // lets update the currentIndex here
-        // currentIndex++;
-        // currentQuestion = questionsArr[currentIndex];
-        // lets now invoke the buildQuiz function to generate the next questions from the array of objects
-      }
-    });
-  });
+  if (button.textContent === currentQuestion.correctAnswer) {
+    currentQuestion.isCorrect = true;
+    // lets invoke fn to provide feedback to user
+    feedback("correct");
+    // lets play the sound file
+    correctWav.play();
+    // lets invoke fn to update the users score
+    quizScore();
+    // lets invoke fn to clean up the questions and feedback from the page
+    cleanUpQuiz();
+    // lets now invoke the buildQuiz function to generate the next questions from the array of objects
+    currentIndex++;
+    // we also need to pass the currentIndex to the currentQuestion again
+    currentQuestion = questionsArr[currentIndex];
+    buildQuiz();
+  } else if (button.textContent !== currentQuestion.correctAnswer) {
+    console.log("Got wrong!", button.textContent);
+    currentQuestion.isCorrect = false;
+    feedback("incorrect");
+    // lets play the sound file
+    wrongWav.play();
+    // lets invoke fn to clean up the questions and feedback from the page
+    cleanUpQuiz();
+    // lets now invoke the buildQuiz function to generate the next questions from the array of objects
+    currentIndex++;
+    // we also need to pass the currentIndex to the currentQuestion again
+    currentQuestion = questionsArr[currentIndex];
+    buildQuiz();
+  }
 };
 
 // lets create a function to keep the users scores
@@ -237,6 +207,12 @@ const quizScore = () => {
   score += 1;
 
   console.log("Current Score: ", score);
+
+  // lets query select the span element and add the score to it
+
+  const finalScore = document.getElementById("final-score");
+
+  finalScore.textContent = score;
 };
 
 // lets create a function to provide the user feedback
@@ -275,7 +251,7 @@ const cleanUpQuiz = () => {
   console.log("Cleaning up questions");
   // lets clean up the question title here
 
-  document.getElementById("question-title").textContent = " ";
+  document.getElementById("question-title").textContent = "";
 
   // lets query select the choices element
 
@@ -283,16 +259,10 @@ const cleanUpQuiz = () => {
 
   choicesEl.innerHTML = "";
 
-  // lets loop through the elements using a while loop and remove each child
-  //https://www.javascripttutorial.net/dom/manipulating/remove-all-child-nodes/
-
-  // while (choicesEl.firstChild) {
-  //   choicesEl.removeChild(choicesEl.firstChild);
-  // }
-
   // we also need to clear the feedback element from the page, lets wrap this within a setTimeout function to remove the element
 
   setTimeout(() => {
+    feedbackEl.innerHTML = ""; // innerHTML actually deletes the content from the element
     feedbackEl.classList.add("hide");
   }, 1000);
 };
@@ -323,12 +293,9 @@ const buildQuiz = () => {
 
   choicesEl.appendChild(ol);
 
-  console.log(choicesEl);
-
   // lets first unhide the questions div container here
 
   questions.classList.remove("hide");
-  console.log(currentIndex);
 
   if (currentIndex < questionsArr.length) {
     console.log("current index: ", currentIndex);
@@ -350,8 +317,6 @@ const buildQuiz = () => {
 
       li.setAttribute("class", "list-item");
 
-      console.log(li);
-
       // lets append each list item element to the ol element
 
       ol.appendChild(li);
@@ -362,34 +327,6 @@ const buildQuiz = () => {
 
       answerBtn.setAttribute("class", "answer-button");
 
-      // answerBtn.addEventListener("click", function (e) {
-      //   console.log(e.target);
-
-      //   // answerBtnHandler();
-      // });
-
-      answerBtn.addEventListener("click", function () {
-        if (answerBtn.textContent === currentQuestion.correctAnswer) {
-          // lets invoke fn to provide feedback to user
-          feedback("correct");
-          // lets invoke fn to update the users score
-          quizScore();
-          // lets invoke fn to clean up the questions and feedback from the page
-          cleanUpQuiz();
-          // lets now invoke the buildQuiz function to generate the next questions from the array of objects
-          buildQuiz();
-        } else if (answerBtn.textContent !== currentQuestion.correctAnswer) {
-          console.log("test");
-          feedback("incorrect");
-          // lets invoke fn to update the users score
-          quizScore();
-          // lets invoke fn to clean up the questions and feedback from the page
-          cleanUpQuiz();
-          // lets now invoke the buildQuiz function to generate the next questions from the array of objects
-          buildQuiz();
-        }
-      });
-
       // lets append each button to the choices div element within each order list - list item
 
       li.appendChild(answerBtn);
@@ -397,23 +334,27 @@ const buildQuiz = () => {
       // lets apply the text from the answers array in to buttons text content
 
       answerBtn.textContent = answer;
+
+      // console.log(answerBtn.textContent);
+      // console.log(currentQuestion.correctAnswer);
+
+      answerBtn.addEventListener("click", function (e) {
+        checkAnswer(e.target);
+      });
     }
-
-    // lets update the currentIndex here
-
-    currentIndex++;
-
-    // we also need to pass the currentIndex to the currentQuestion again
-
-    currentQuestion = questionsArr[currentIndex];
   }
+
+  // if the currentIndex value equals the lenght of the array, let display the end screen element to the page
+
+  if (currentIndex === questionsArr.length)
+    endScreenEl.classList.remove("hide");
 };
 
 // lets create an init() function here - we will invoke all the event handlers here
 
 const init = () => {
   // lets pass in a function to the handler
-  startQuizHandler(buildQuiz, answerBtnHandler);
+  startQuizHandler(buildQuiz);
 };
 
 // lets invoke the init function
@@ -421,6 +362,8 @@ const init = () => {
 init();
 
 /* 
+
+KEEPING FOR REFERENCE 
 
 
 STARTING ALL OVER AGAIN AS THIS CODE NOT WORKING CORRECTLY AND NO ERROR REGISTERING IN CONSOLE EITHER - THE ANSWERS IN THE ARRAY ARE CREATED BUT THEN IS BEING CLEARED FROM THE PAGE. I THINK IT IS PROBLEM WITH HOW THE CODE HAS BEEN STRUCTURED WHERE THE QUESTIONS ARE EXTRACTED FROM THE ARRAY OF OBJECTS - questions.js file - AND THEN PASSED TO FUNCTION - makeAppear - that renders the button elements on to the page with the currentQuestion being passed to it - THIS WORKS FOR THE FIRST TWO OBJECTS BUT THEN THE THIRD OBJECT OF QUESTIONS DOES NOT APPEAR ON THE PAGE.
