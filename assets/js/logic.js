@@ -148,20 +148,23 @@ let currentQuestion = questionsArr[currentIndex]; // we will increment currentIn
 
 let timerLeft = 25; // this is the start of timer
 
-// we need a variable to keep the score when the user gets answer correct
 // lets create an object to store the user score and add the final score to localStorage
 
 const Score = {
   score: 0,
   initials: "",
+  highscores: [],
   addScore: function () {
     this.score += 1;
   },
   addFinal: function () {
-    window.localStorage.setItem("finalScore", JSON.stringify(this.score));
+    this.highscores = { initials: this.initials, highscore: this.score };
   },
-  addInitials: function () {
-    window.localStorage.setItem("initials", JSON.stringify(this.initials));
+  setToLocal: function () {
+    window.localStorage.setItem("highscore", JSON.stringify(this.highscores));
+  },
+  getFromLocal: function () {
+    JSON.parse(window.localStorage.getItem("highscore"));
   },
 };
 
@@ -191,7 +194,7 @@ const timer = () => {
   let counter = 0;
   let currentTime;
 
-  // lets create a helper function here to conver mins and secs to string
+  // lets create a helper function here to convert mins and secs to string
 
   const convertToString = (s) => {
     const mins = String(Math.floor(s / 60)); // 75 /60 = 1.25 Math.floor rounds down to the largest given number
@@ -226,7 +229,7 @@ const timer = () => {
 };
 
 const checkAnswer = (button) => {
-  // lets create a variable here to assign the HTMLAudioElement interface
+  // lets create variables here to assign the HTMLAudioElement interface
 
   const correctWav = new Audio("../assets/sfx/correct.wav");
   const wrongWav = new Audio("../assets/sfx/incorrect.wav");
@@ -264,14 +267,11 @@ const checkAnswer = (button) => {
 // lets create a function to keep the users scores
 
 const quizScore = () => {
+  // lets use the object method to add the score to the score prop
   Score.addScore();
-
   console.log("Current Score: ", Score.score);
-
   // lets query select the span element and add the score to it
-
   const finalScore = document.getElementById("final-score");
-
   finalScore.textContent = Score.score;
 };
 
@@ -339,30 +339,24 @@ const endQuiz = () => {
   // lets display the end screen
   endScreenEl.classList.remove("hide");
 
-  // lets invoke the object method here to store the final score
-  Score.addFinal();
-
   // lets query select the submit button and attach an event listener
 
   const submitBtn = document.getElementById("submit");
 
   submitBtn.addEventListener("click", function (e) {
-    // lets query select the initials element
-
-    const initialsEl = document.getElementById("initials").value;
+    console.log(e);
     // lets prevent the screen from reloading when user submits the form
-
     e.preventDefault();
-
-    // lets invoke the object method to add intitials to localStorage
-
+    // lets query select the initials element
+    const initialsEl = document.getElementById("initials").value;
     // lets now add the above initials to the object
-
     Score.initials = initialsEl;
-
-    // lets now add it to localStorage
-
-    Score.addInitials();
+    // lets use the object method to add the final score to an array stored in object
+    Score.addFinal();
+    // lets invoke the object method here to store the user initals and final score to localStorage
+    Score.setToLocal();
+    // lets use the window.location object to load the page
+    window.location.assign("highscores.html");
   });
 };
 
