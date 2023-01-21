@@ -144,6 +144,10 @@ let currentIndex = 0;
 
 let currentQuestion = questionsArr[currentIndex]; // we will increment currentIndex below
 
+// the timer value
+
+let timerLeft = 25; // this is the start of timer
+
 // we need a variable to keep the score when the user gets answer correct
 // lets create an object to store the user score and add the final score to localStorage
 
@@ -185,7 +189,7 @@ const startQuizHandler = (buildQuiz) => {
 
 const timer = () => {
   let counter = 0;
-  let timerLeft = 25; // this is the start of timer
+  let currentTime;
 
   // lets create a helper function here to conver mins and secs to string
 
@@ -202,12 +206,17 @@ const timer = () => {
     // we need to increment the counter variable so it deducts the secs from the timerLeft
     counter++;
     // lets create a variable to store the current time
-    const currentTime = timerLeft - counter;
+    currentTime = timerLeft - counter;
+
     // we need to stop the timer when it reaches zero
     if (currentTime >= 0) {
       console.log(currentTime);
       // lets display the current time on the page
       time.textContent = convertToString(currentTime);
+    }
+    // we need to clear the interval when it reaches zero number remains on time element
+    if (currentTime === 0) {
+      clearInterval(clock);
     }
   };
 
@@ -223,7 +232,6 @@ const checkAnswer = (button) => {
   const wrongWav = new Audio("../assets/sfx/incorrect.wav");
 
   if (button.textContent === currentQuestion.correctAnswer) {
-    currentQuestion.isCorrect = true;
     // lets invoke fn to provide feedback to user
     feedback("correct");
     // lets play the sound file
@@ -239,7 +247,7 @@ const checkAnswer = (button) => {
     buildQuiz();
   } else if (button.textContent !== currentQuestion.correctAnswer) {
     console.log("Got wrong!", button.textContent);
-    currentQuestion.isCorrect = false;
+    timerLeft -= 5;
     feedback("incorrect");
     // lets play the sound file
     wrongWav.play();
