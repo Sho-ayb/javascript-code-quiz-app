@@ -161,11 +161,9 @@ const Score = {
   },
 };
 
-let score = 0; // need to set the value to zero first
-
 // functions for event handlers
 
-const startQuizHandler = (buildQuiz, answerBtn) => {
+const startQuizHandler = (buildQuiz) => {
   // lets attach an event listener to the startBtn
 
   startBtnEl.addEventListener("click", function () {
@@ -176,7 +174,46 @@ const startQuizHandler = (buildQuiz, answerBtn) => {
 
     // lets invoke the buildQuiz function
     buildQuiz();
+
+    // lets start the timer
+
+    timer();
   });
+};
+
+// lets create a timer for the page
+
+const timer = () => {
+  let counter = 0;
+  let timerLeft = 25; // this is the start of timer
+
+  // lets create a helper function here to conver mins and secs to string
+
+  const convertToString = (s) => {
+    const mins = String(Math.floor(s / 60)); // 75 /60 = 1.25 Math.floor rounds down to the largest given number
+    const secs = String(s % 60); // modular operand returns the remainder e.g 25
+
+    // lets return the above vars to this function
+
+    return mins + ":" + secs;
+  };
+
+  const tick = () => {
+    // we need to increment the counter variable so it deducts the secs from the timerLeft
+    counter++;
+    // lets create a variable to store the current time
+    const currentTime = timerLeft - counter;
+    // we need to stop the timer when it reaches zero
+    if (currentTime >= 0) {
+      console.log(currentTime);
+      // lets display the current time on the page
+      time.textContent = convertToString(currentTime);
+    }
+  };
+
+  // lets pass the tick fn in to setInterval
+
+  const clock = setInterval(tick, 1000);
 };
 
 const checkAnswer = (button) => {
