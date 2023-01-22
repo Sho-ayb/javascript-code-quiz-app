@@ -40,3 +40,5 @@ without breaking the underlying code of the application.
 ![code-quiz-capture](./code-quiz-capture.gif)
 
 ## A link to the deployed application
+
+[Please click this link to open the code quiz application](https://sho-ayb.github.io/javascript-code-quiz-app/index.html)
