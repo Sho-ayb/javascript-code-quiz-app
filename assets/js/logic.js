@@ -146,7 +146,7 @@ let currentQuestion = questionsArr[currentIndex]; // we will increment currentIn
 
 // the timer value
 
-let timerLeft = 25; // this is the start of timer
+let timerLeft = 75; // this is the start of timer
 
 // lets create an object to store the user score and add the final score to localStorage
 
@@ -193,6 +193,35 @@ const startQuizHandler = (buildQuiz) => {
   });
 };
 
+// end the quiz function
+
+const endQuiz = () => {
+  // lets display the end screen
+  endScreenEl.classList.remove("hide");
+
+  // lets query select the submit button and attach an event listener
+
+  const submitBtn = document.getElementById("submit");
+
+  submitBtn.addEventListener("click", function (e) {
+    // lets prevent the screen from reloading when user submits the form
+    e.preventDefault();
+    // lets query select the initials element
+    const initialsEl = document.getElementById("initials").value;
+    // lets now add the above initials to the object
+    Score.initials = initialsEl;
+    // lets use the object method to add the final score to an array stored in object
+    Score.addFinal();
+    // lets invoke the object method here to store the user initals and final score to localStorage
+    Score.setToLocal();
+    // lets use the window.location object to load the page
+    window.location.assign("highscores.html");
+    console.log(Score.highscores);
+  });
+};
+
+// lets keep all the helper functions presented here
+
 // lets create a timer for the page
 
 const timer = () => {
@@ -225,60 +254,14 @@ const timer = () => {
     // we need to clear the interval when it reaches zero number remains on time element
     if (currentTime === 0) {
       clearInterval(clock);
+      endQuiz();
+      cleanUpQuiz();
     }
   };
 
   // lets pass the tick fn in to setInterval
 
   const clock = setInterval(tick, 1000);
-};
-
-const checkAnswer = (button) => {
-  // lets create variables here to assign the HTMLAudioElement interface
-
-  const correctWav = new Audio("../assets/sfx/correct.wav");
-  const wrongWav = new Audio("../assets/sfx/incorrect.wav");
-
-  if (button.textContent === currentQuestion.correctAnswer) {
-    // lets invoke fn to provide feedback to user
-    feedback("correct");
-    // lets play the sound file
-    correctWav.play();
-    // lets invoke fn to update the users score
-    quizScore();
-    // lets invoke fn to clean up the questions and feedback from the page
-    cleanUpQuiz();
-    currentIndex++;
-    // we also need to pass the currentIndex to the currentQuestion again
-    currentQuestion = questionsArr[currentIndex];
-    // lets now invoke the buildQuiz function to generate the next questions from the array of objects
-    buildQuiz();
-  } else if (button.textContent !== currentQuestion.correctAnswer) {
-    console.log("Got wrong!", button.textContent);
-    timerLeft -= 5;
-    feedback("incorrect");
-    // lets play the sound file
-    wrongWav.play();
-    // lets invoke fn to clean up the questions and feedback from the page
-    cleanUpQuiz();
-    currentIndex++;
-    // we also need to pass the currentIndex to the currentQuestion again
-    currentQuestion = questionsArr[currentIndex];
-    // lets now invoke the buildQuiz function to generate the next questions from the array of objects
-    buildQuiz();
-  }
-};
-
-// lets create a function to keep the users scores
-
-const quizScore = () => {
-  // lets use the object method to add the score to the score prop
-  Score.addScore();
-  console.log("Current Score: ", Score.score);
-  // lets query select the span element and add the score to it
-  const finalScore = document.getElementById("final-score");
-  finalScore.textContent = Score.score;
-  console.log(Score.highscores);
 };
 
 // lets create a function to provide the user feedback
@@ -339,32 +322,7 @@ const cleanUpStart = () => {
   startScreenEl.setAttribute("class", "hide");
 };
 
-// end the quiz function
-
-const endQuiz = () => {
-  // lets display the end screen
-  endScreenEl.classList.remove("hide");
-
-  // lets query select the submit button and attach an event listener
-
-  const submitBtn = document.getElementById("submit");
-
-  submitBtn.addEventListener("click", function (e) {
-    // lets prevent the screen from reloading when user submits the form
-    e.preventDefault();
-    // lets query select the initials element
-    const initialsEl = document.getElementById("initials").value;
-    // lets now add the above initials to the object
-    Score.initials = initialsEl;
-    // lets use the object method to add the final score to an array stored in object
-    Score.addFinal();
-    // lets invoke the object method here to store the user initals and final score to localStorage
-    Score.setToLocal();
-    // lets use the window.location object to load the page
-    window.location.assign("highscores.html");
-    console.log(Score.highscores);
-  });
-};
+// lets keep all the main quiz app functions here
 
 // function for the questions page
 
@@ -428,8 +386,7 @@ const buildQuiz = () => {
 
       answerBtn.textContent = answer;
 
-      // console.log(answerBtn.textContent);
-      // console.log(currentQuestion.correctAnswer);
+      // we need the event handler here: on each button when it is clicked the checkAnswer will execute
 
       answerBtn.addEventListener("click", function (e) {
         checkAnswer(e.target);
@@ -444,7 +401,58 @@ const buildQuiz = () => {
   }
 };
 
-// lets create an init() function here - we will invoke all the event handlers here
+// function to check the answer is correct or incorrect
+
+const checkAnswer = (button) => {
+  // lets create variables here to assign the HTMLAudioElement interface
+
+  const correctWav = new Audio("../assets/sfx/correct.wav");
+  const wrongWav = new Audio("../assets/sfx/incorrect.wav");
+
+  if (button.textContent === currentQuestion.correctAnswer) {
+    // lets invoke fn to provide feedback to user
+    feedback("correct");
+    // lets play the sound file
+    correctWav.play();
+    // lets invoke fn to update the users score
+    quizScore();
+    // lets invoke fn to clean up the questions and feedback from the page
+    cleanUpQuiz();
+    // lets increment the current index variable
+    currentIndex++;
+    // we also need to pass the currentIndex to the currentQuestion again
+    currentQuestion = questionsArr[currentIndex];
+    // lets now invoke the buildQuiz function to generate the next questions from the array of objects
+    buildQuiz();
+  } else if (button.textContent !== currentQuestion.correctAnswer) {
+    console.log("Got wrong!", button.textContent);
+    timerLeft -= 5; // do not know why timer goes down 6 instead of 5 ???
+    feedback("incorrect");
+    // lets play the sound file
+    wrongWav.play();
+    // lets invoke fn to clean up the questions and feedback from the page
+    cleanUpQuiz();
+    // lets increment the current index variable
+    currentIndex++;
+    // we also need to pass the currentIndex to the currentQuestion again
+    currentQuestion = questionsArr[currentIndex];
+    // lets now invoke the buildQuiz function to generate the next questions from the array of objects
+    buildQuiz();
+  }
+};
+
+// lets create a function to keep the users scores
+
+const quizScore = () => {
+  console.log("Current Score: ", Score.score);
+  // lets use the object method to add the score to the score prop
+  Score.addScore();
+  // lets query select the span element and add the score to it
+  const finalScore = document.getElementById("final-score");
+  finalScore.textContent = Score.score;
+};
+
+// lets create an init() function here - we will invoke the main event handler
 
 const init = () => {
   // lets pass in a function to the handler
