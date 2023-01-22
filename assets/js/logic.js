@@ -168,8 +168,8 @@ const Score = {
   setToLocal: function () {
     window.localStorage.setItem("highscore", JSON.stringify(this.highscores));
   },
-  getFromLocal: function () {
-    JSON.parse(window.localStorage.getItem("highscore"));
+  clearLocalStore: function () {
+    window.localStorage.clear("highscore");
   },
 };
 
