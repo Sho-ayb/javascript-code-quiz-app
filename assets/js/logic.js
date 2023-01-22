@@ -406,8 +406,8 @@ const buildQuiz = () => {
 const checkAnswer = (button) => {
   // lets create variables here to assign the HTMLAudioElement interface
 
-  const correctWav = new Audio("../assets/sfx/correct.wav");
-  const wrongWav = new Audio("../assets/sfx/incorrect.wav");
+  const correctWav = new Audio("./assets/sfx/correct.wav");
+  const wrongWav = new Audio("./assets/sfx/incorrect.wav");
 
   if (button.textContent === currentQuestion.correctAnswer) {
     // lets invoke fn to provide feedback to user
