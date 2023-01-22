@@ -37,6 +37,6 @@ without breaking the underlying code of the application.
 
 ## A gif of the code quiz in action
 
-![code-quiz-capture]('./code-quiz-capture.gif')
+![code-quiz-capture](./code-quiz-capture.gif)
 
 ## A link to the deployed application
