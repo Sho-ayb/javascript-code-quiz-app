@@ -153,12 +153,17 @@ let timerLeft = 25; // this is the start of timer
 const Score = {
   score: 0,
   initials: "",
-  highscores: [],
+  highscores: JSON.parse(window.localStorage.getItem("highscore")) || [],
   addScore: function () {
     this.score += 1;
   },
   addFinal: function () {
-    this.highscores = { initials: this.initials, highscore: this.score };
+    const newScore = {
+      initials: this.initials,
+      highscore: this.score,
+    };
+
+    this.highscores.push(newScore);
   },
   setToLocal: function () {
     window.localStorage.setItem("highscore", JSON.stringify(this.highscores));
@@ -273,6 +278,7 @@ const quizScore = () => {
   // lets query select the span element and add the score to it
   const finalScore = document.getElementById("final-score");
   finalScore.textContent = Score.score;
+  console.log(Score.highscores);
 };
 
 // lets create a function to provide the user feedback
@@ -344,7 +350,6 @@ const endQuiz = () => {
   const submitBtn = document.getElementById("submit");
 
   submitBtn.addEventListener("click", function (e) {
-    console.log(e);
     // lets prevent the screen from reloading when user submits the form
     e.preventDefault();
     // lets query select the initials element
@@ -357,6 +362,7 @@ const endQuiz = () => {
     Score.setToLocal();
     // lets use the window.location object to load the page
     window.location.assign("highscores.html");
+    console.log(Score.highscores);
   });
 };
 
