@@ -24,11 +24,11 @@ without breaking the underlying code of the application.
 - If the timer countsdown to zero before the player completes all questions
   the quiz application will display the end screen and this is also true if the
   user completes all questions within the time limit.
-- The player is then presented with end screen which displays the final
-  score and allows the user to submit there initials that remain persistent even
+- The player is then presented with an end screen which displays the final
+  score and allows the user to submit their initials that remain persistent even
   after the user closes the browser.
 - Once the player submits his final score - providing his initials being set
-  to max three characters long, the player is presented with the highscores
+  to max three characters long; the player is presented with the highscores
   page.
 - The highscores page provides an ordered list of the players highest scores
   in descending order - the user can go back to start the quiz again or decide
